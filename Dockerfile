@@ -1,22 +1,19 @@
-# Usamos una imagen oficial de Java 17
-FROM eclipse-temurin:17-jdk-alpine as build
-
+# Etapa de compilación con Maven estándar
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copiamos los archivos de Maven y el código fuente
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
+# Copiamos el archivo pom.xml y descargamos dependencias primero (para aprovechar caché)
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copiamos el código fuente y compilamos
 COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Empaquetamos la aplicación ignorando las pruebas para agilizar
-RUN ./mvnw clean package -DskipTests
-
-# Etapa final para ejecutar la aplicación
+# Etapa de ejecución final
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-# Render asigna dinámicamente un puerto mediante la variable PORT
 EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
