@@ -26,8 +26,8 @@ public class ConfigSegurity {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/empresa/public/v1/auth/login").permitAll()
-                        .requestMatchers("/empresa/public/v1/auth/registro").permitAll()
+                        .requestMatchers("/empresa/public/v1/auth/**").permitAll()
+                        .requestMatchers("/empresa/public/v1/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sesiones ->
