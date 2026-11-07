@@ -1,0 +1,4 @@
+com\upiiz\security\SecurityApplication.class
+com\upiiz\security\clientes\ClienteController.class
+com\upiiz\security\config\ConfigSegurity.class
+com\upiiz\security\aut\AuthController.class
